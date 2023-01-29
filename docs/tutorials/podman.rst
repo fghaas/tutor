@@ -20,7 +20,7 @@ Podman is supported on a variety of development platforms, see the `installation
 
 Once you have installed Podman and its dependencies on the platform of your choice, you'll need to make sure that the ``podman`` binary, usually installed as ``/usr/bin/podman``, is aliased to ``docker``.
 
-On some CentOS and Fedora releases, you can install a package named ``podman-docker`` to do this for you, but on other platforms, you'll need to take of this yourself.
+On some CentOS, Fedora, Debian, and Ubuntu releases, you can install a package named ``podman-docker`` to do this for you, but on other platforms, you'll need to take of this yourself.
 
 - To alias ``podman`` to ``docker``, you can simply run this command::
 
@@ -41,6 +41,9 @@ For rootless containers, this requires you to start the ``podman.service`` as a 
 
   # To set the DOCKER_HOST environment variable
   $ export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+
+  # If your shell doesn't set $XDG_RUNTIME_DIR, you can instead use:
+  $ export DOCKER_HOST="unix:///run/user/$UID/podman/podman.sock"
 
 .. note::
    As with the previous ``alias`` command, if you'd like to make the ``DOCKER_HOST`` variable permanent, you should put the entire export command in your ``bashrc`` or equivalent file.
@@ -91,3 +94,6 @@ Verifying your environment
 Once you've set everything up as described, you should be able to run ``docker version`` and ``docker-compose --help`` and get a valid output.
 
 After that, you should be able to use ``tutor local``, and other commands as if you had installed the native Docker tools.
+
+.. note::
+   In a default configuration, ``tutor local`` makes the Caddy HTTP service listen on TCP port 80 on the host. This won't work in a rootless podman environment, so you will need to set ``CADDY_HTTP_PORT`` to an alternate port (such as 8080).
